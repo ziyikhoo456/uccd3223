@@ -44,6 +44,7 @@ public class SQLiteAdapter {
         context = c;
     }
 
+    //Get the number of rows inside the database
     public int getCount() throws android.database.SQLException{
         int count = 0;
         String[] columns = new String[] {DATE,TIME,CATEGORY,PEOPLE,AMOUNT};
@@ -81,8 +82,6 @@ public class SQLiteAdapter {
 
 
 
-
-
     //Insert content into the columns
     public long insert(String date, String time, String category, String people, String amount){
 
@@ -99,56 +98,6 @@ public class SQLiteAdapter {
     }
 
 
-    public String queueAll(){
-
-        String[] columns = new String[] {DATE,TIME,CATEGORY,PEOPLE,AMOUNT};
-        Cursor cursor = sqLiteDatabase.query(DATABASE_TABLE, columns, null,null,null,null,null);
-
-        String result = "";
-        int index_CONTENT = cursor.getColumnIndex(DATE);
-        int index_CONTENT_2 = cursor.getColumnIndex(TIME);
-        int index_CONTENT_3 = cursor.getColumnIndex(CATEGORY);
-        int index_CONTENT_4 = cursor.getColumnIndex(PEOPLE);
-        int index_CONTENT_5 = cursor.getColumnIndex(AMOUNT);
-
-        cursor.moveToLast();
-        cursor.isBeforeFirst();
-
-        for(cursor.moveToLast(); !(cursor.isBeforeFirst()); cursor.moveToPrevious()){
-            result = result + cursor.getString(index_CONTENT) + "     "
-                    + cursor.getString(index_CONTENT_2) + "     "
-                    + cursor.getString(index_CONTENT_3) + "     "
-                    + cursor.getString(index_CONTENT_4) + "     "
-                    + cursor.getString(index_CONTENT_5) + "\n";
-        }
-
-
-        return result;
-    }
-
-
-    public String queueSome(String category){
-
-        String[] columns = new String[] {DATE,TIME,CATEGORY,PEOPLE,AMOUNT};
-        Cursor cursor = sqLiteDatabase.query(DATABASE_TABLE, columns, CATEGORY+" =?",new String[]{category},null,null,null);
-
-        String result = "";
-        int index_CONTENT = cursor.getColumnIndex(DATE);
-        int index_CONTENT_2 = cursor.getColumnIndex(TIME);
-        int index_CONTENT_3 = cursor.getColumnIndex(CATEGORY);
-        int index_CONTENT_4 = cursor.getColumnIndex(PEOPLE);
-        int index_CONTENT_5 = cursor.getColumnIndex(AMOUNT);
-
-        for(cursor.moveToLast(); !(cursor.isBeforeFirst()); cursor.moveToPrevious()){
-            result = result + cursor.getString(index_CONTENT) + "     "
-                    + cursor.getString(index_CONTENT_2) + "     "
-                    + cursor.getString(index_CONTENT_3) + "     "
-                    + cursor.getString(index_CONTENT_4) + "     "
-                    + cursor.getString(index_CONTENT_5) + "\n";
-        }
-        result += "\n";
-        return result;
-    }
 
     public String[][] queueSome(String selection, String[] args) {
 

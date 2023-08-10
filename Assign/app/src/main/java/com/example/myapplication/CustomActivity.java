@@ -15,6 +15,7 @@ public class CustomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom);
 
+        //Get the value of amount and people from SharedPreferences
         SharedPreferences pref = getSharedPreferences("MySharedPreferences",0);
         float total = pref.getFloat("total",0);
         int ppl = pref.getInt("ppl",1);

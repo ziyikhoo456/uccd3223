@@ -31,6 +31,7 @@ public class InputActivity extends Activity {
 
         mySQLiteAdapter = new SQLiteAdapter(this);
 
+        //Get the value of people and amount from SharedPreferences
         SharedPreferences pref = getSharedPreferences("MySharedPreferences", 0);
         float total = pref.getFloat("total", 0);
         int ppl = pref.getInt("ppl", 1);
@@ -49,6 +50,7 @@ public class InputActivity extends Activity {
         Button plusBtn = (Button) findViewById(R.id.plusBtn);
         Button submitBtn = (Button) findViewById(R.id.submitBtn);
 
+        //Display %, RM or display none according to type
         String type = this.getIntent().getStringExtra("TYPE");
         if (type.contentEquals("percentage")) {
             RMSymbol.setText("");
@@ -63,9 +65,11 @@ public class InputActivity extends Activity {
         amountTV.setText("RM " + String.format("%.2f", total));
         pplTV.setText(ppl + " People");
 
+        //Disable minus button because the first person is displayed
         minusBtn.setEnabled(false);
         numberTV.setText("Person " + (count + 1));
 
+        //Disable plus button if the displayed person now is the last person
         if ((count + 1) == ppl) {
             plusBtn.setEnabled(false);
         }
@@ -80,22 +84,30 @@ public class InputActivity extends Activity {
         plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //Check if the name is empty then set default name
                 if (isEmpty(nameET.getText())) {
                     nameET.setText("Person " + (count + 1));
-                }
+                } //Check if the amount is empty then set 0
                 if (isEmpty(percentET.getText())) {
                     percentET.setText("0");
                 }
+
+                //Store the name and amount into arrays
                 name[count] = nameET.getText().toString();
                 percent[count] = Float.parseFloat(percentET.getText().toString());
 
                 count++;
+
+                //Display name and amount
                 nameET.setText(name[count]);
                 percentET.setText(Float.toString(percent[count]));
-
                 numberTV.setText("Person " + (count + 1));
+
+                //Enable minus button
                 minusBtn.setEnabled(true);
 
+                //Disable plus button when the displayed person is the last person
                 if ((count + 1) == ppl) {
                     plusBtn.setEnabled(false);
                 } else {
@@ -104,6 +116,7 @@ public class InputActivity extends Activity {
             }
         });
 
+        //Same as above
         minusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,6 +135,7 @@ public class InputActivity extends Activity {
                 numberTV.setText("Person " + (count + 1));
                 plusBtn.setEnabled(true);
 
+                //Disable minus button if the displayed person is the first person
                 if ((count + 1) == 1) {
                     minusBtn.setEnabled(false);
                 } else {
@@ -137,6 +151,7 @@ public class InputActivity extends Activity {
                 float sum = 0;
                 float eachBill;
 
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(InputActivity.this);
                 builder.setTitle("Result");
                 StringBuilder str = new StringBuilder();
@@ -151,11 +166,14 @@ public class InputActivity extends Activity {
                 percent[count] = Float.parseFloat(percentET.getText().toString());
 
                 if (type.contentEquals("percentage")) {
+
+                    //Calculate value for each person using percentage formula
                     sum = 0;
                     for (int i = 0; i < ppl; i++) {
                         sum += percent[i];
                     }
 
+                    //Prompt error if the sum of values not equal to 100%
                     if (sum != 100) {
                         Toast.makeText(InputActivity.this, "Error: The sum must be 100%", Toast.LENGTH_SHORT).show();
                         return;
@@ -175,11 +193,14 @@ public class InputActivity extends Activity {
                 }
 
                 if (type.contentEquals("ratio")) {
+
+                    //Calculate value for each person using ratio formula
                     sum = 0;
                     for (int i = 0; i < ppl; i++) {
                         sum += percent[i];
                     }
 
+                    //Prompt error if the sum is 0
                     if (sum == 0) {
                         Toast.makeText(InputActivity.this, "Error: The sum must not be 0", Toast.LENGTH_SHORT).show();
                         return;
@@ -199,11 +220,14 @@ public class InputActivity extends Activity {
                 }
 
                 if (type.contentEquals("custom")) {
+
+                    //Calculate value for each person using percentage formula
                     sum = 0;
                     for (int i = 0; i < ppl; i++) {
                         sum += percent[i];
                     }
 
+                    //Prompt error if the sum of value not equal to the total bill
                     if (sum != total) {
                         Toast.makeText(InputActivity.this, "Error: The sum must be RM" + String.format("%.2f", total), Toast.LENGTH_SHORT).show();
                         return;

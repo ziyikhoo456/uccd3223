@@ -39,10 +39,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         mySQLiteAdaper = new SQLiteAdapter(this);
-        final String equalCat = "Equal Break Down";
-        final String customCat = "Custom Break Down";
-        final String combinationCat = "Combination Break Down";
 
+        //To delete the information inside the database
         /*mySQLiteAdaper.openToWrite();
         mySQLiteAdaper.deleteAll();
         mySQLiteAdaper.close();*/
@@ -57,9 +55,10 @@ public class HomeActivity extends AppCompatActivity {
         Button customBtn = (Button)findViewById(R.id.btn);
         Button historyBtn = (Button)findViewById(R.id.historyBtn);
 
-        // Set an initial value
+        // Set an initial value for people
         peopleET.setText("1");
 
+        //To connect the SeekBar with peopleEditText
         peopleET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -68,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(isEmpty(s)){return;}
                 int num = Integer.parseInt(s.toString());
-                peopleSB.setProgress(num);
+                peopleSB.setProgress(num); //set the SekBar value into the value of peopleEditText
             }
 
             @Override
@@ -99,6 +98,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 StringBuilder str = new StringBuilder();
 
+                //Prompt error if amount or people is null
                 if(isEmpty(amountET.getText()) || isEmpty(peopleET.getText())){
                     Toast.makeText(HomeActivity.this,"Error: Please fill in all information",Toast.LENGTH_SHORT).show();
                     return;
@@ -111,10 +111,12 @@ public class HomeActivity extends AppCompatActivity {
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                 String time = new SimpleDateFormat("hh:mm", Locale.getDefault()).format(new Date());
 
+                //Write a row into database
                 mySQLiteAdaper.openToWrite();
                 mySQLiteAdaper.insert(date,time,"Equal",ppl+" people",String.format("%.2f", eachBill));
                 mySQLiteAdaper.close();
 
+                //Display results to screen
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
                 builder.setTitle("Result");
                 str.append("The amount need to be paid by each person: RM"+String.format("%.2f", eachBill));
@@ -129,6 +131,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 });
 
+                //Enable people to share results to WhatsApp
                 builder.setNegativeButton("Share to WhatsApp", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -152,6 +155,7 @@ public class HomeActivity extends AppCompatActivity {
         customBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                //Prompt error if amount or people is null
                 if(isEmpty(amountET.getText()) || isEmpty(peopleET.getText())){
                     Toast.makeText(HomeActivity.this,"Error: Please fill in all information",Toast.LENGTH_SHORT).show();
                     return;
@@ -160,12 +164,14 @@ public class HomeActivity extends AppCompatActivity {
                 total = Float.parseFloat(amountET.getText().toString());
                 ppl = Integer.parseInt(peopleET.getText().toString());
 
+                //Stored the value of amount and people into a SharedPreference
                 SharedPreferences pref = getSharedPreferences("MySharedPreferences", MODE_PRIVATE);
                 SharedPreferences.Editor prefEditor = pref.edit();
                 prefEditor.putFloat("total",total);
                 prefEditor.putInt("ppl",ppl);
                 prefEditor.commit();
 
+                //Start new page
                 Intent i = new Intent(HomeActivity.this, CustomActivity.class);
                 startActivity(i);
             }
@@ -174,10 +180,6 @@ public class HomeActivity extends AppCompatActivity {
         historyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mySQLiteAdaper.openToRead();
-                String equalRead = mySQLiteAdaper.queueSome(equalCat);
-                String customRead = mySQLiteAdaper.queueSome(customCat);
-                mySQLiteAdaper.close();
 
                 Intent i = new Intent(HomeActivity.this, HistoryActivity.class);
                 startActivity(i);

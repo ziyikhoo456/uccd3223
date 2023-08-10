@@ -40,24 +40,32 @@ public class HistoryActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton equalCB, boolean b) {
                 // Clear existing rows
                 tableLayout.removeAllViews();
+
+                //Display only equal break down result
                 if (equalCB.isChecked() && (customCB.isChecked() == false)) {
                     selection = "Category =?";
                     args = new String[]{"Equal"};
-                } else if((equalCB.isChecked()==false) && customCB.isChecked()) {
+                }
+
+                //Display only custom break down result
+                else if((equalCB.isChecked()==false) && customCB.isChecked()) {
                     selection = "Category =?";
                     args = new String[]{"Custom"};
+                }
 
-                } else if (equalCB.isChecked() && customCB.isChecked()){
+                //Display both break down result
+                else if (equalCB.isChecked() && customCB.isChecked()){
                     selection = "Category =? OR Category =?";
                     args = new String[]{"Equal", "Custom"};
 
-                } else {
+                } else { //don't display everything
                     return;
                 }
 
                 mySQLiteAdapter.openToRead();
                 display = mySQLiteAdapter.queueSome(selection,args);
 
+                //display the results in table
                 for(int i = 0; i < mySQLiteAdapter.getCount(); i++){
                     TableRow row = new TableRow(HistoryActivity.this);
                     for(int j = 0; j < 5; j++){
@@ -83,24 +91,33 @@ public class HistoryActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton customCB, boolean b) {
                 // Clear existing rows
                 tableLayout.removeAllViews();
+
+                //Display the result of equal break down only
                 if (equalCB.isChecked() && (customCB.isChecked() == false)) {
                     selection = "Category =?";
                     args = new String[]{"Equal"};
-                } else if((equalCB.isChecked()==false) && customCB.isChecked()) {
+                }
+
+                //Display the result of custom break down only
+                else if((equalCB.isChecked()==false) && customCB.isChecked()) {
                     selection = "Category =?";
                     args = new String[]{"Custom"};
 
-                } else if (equalCB.isChecked() && customCB.isChecked()){
+                }
+
+                //Display the results of both break down
+                else if (equalCB.isChecked() && customCB.isChecked()){
                     selection = "Category =? OR Category =?";
                     args = new String[]{"Equal", "Custom"};
 
-                } else {
+                } else { //don't display anything
                     return;
                 }
 
                 mySQLiteAdapter.openToRead();
                 display = mySQLiteAdapter.queueSome(selection,args);
 
+                //Display the results in table
                 for(int i = 0; i < mySQLiteAdapter.getCount(); i++){
                     TableRow row = new TableRow(HistoryActivity.this);
                     for(int j = 0; j < 5; j++){
